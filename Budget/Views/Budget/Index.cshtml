@@ -1,0 +1,51 @@
+﻿@model List<Budget.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Budget App";
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Category)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+    @foreach(var element in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor( p => element.Name)
+            </td>
+            <td>
+                @Html.DisplayFor( p => element.Description)
+            </td>
+            <td>
+                @Html.DisplayFor( p => element.Date)
+            </td>
+            <td>
+                @Html.DisplayFor( p => element.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor( p => element.Category)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
