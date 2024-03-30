@@ -6,6 +6,7 @@ using Budget.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Buffers;
 
 namespace Budget;
 
@@ -20,6 +21,7 @@ public class BudgetApp
             options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetConnectionString") ?? 
                 throw new InvalidOperationException("Connection string 'BudgetContext' not found.")));
 
+        builder.Services.AddSwaggerGen();
         var app = builder.Build();
         app.UseRequestLocalization( new RequestLocalizationOptions
             {
@@ -30,6 +32,11 @@ public class BudgetApp
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
+        }
+        else
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         using (var context = new BudgetContext( 

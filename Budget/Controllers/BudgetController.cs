@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Budget.Models;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq;
+using System.Data;
+using Microsoft.Extensions.FileProviders;
 
 namespace Budget.Controllers;
 
@@ -13,23 +17,117 @@ public class BudgetController(BudgetContext context) : Controller
     public async Task<IActionResult> Index()
     {
         if (_context.Transactions == null)
-        {
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
-        }
-        
+          
         return View(await _context.Transactions.ToListAsync());
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,Date,Amount,Category")] Transaction transaction)
+    [Route("Budget/Transactions/Create/")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateTransaction([Bind("Name,Description,Date,Amount,Category"), FromBody] Transaction transaction)
     {
         if (ModelState.IsValid)
         {
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Created($"Budget/Transactions/{transaction.Id}", transaction);
         }
-        return RedirectToAction(nameof(Index));
+        return BadRequest();
+    }
+
+    [HttpDelete]
+    [Route("Budget/Transactions/Delete/{id}")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteTransaction(int id)
+    {
+        var transaction = await _context.Transactions.FindAsync(id);
+        if (transaction != null)
+            _context.Transactions.Remove(transaction);
+        else
+            return NotFound();
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("Budget/Transactions/Update/{id}")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateTransaction(int id, [Bind("Id,Name,Description,Date,Amount,Category")] Transaction transaction)
+    {
+        if( id != transaction.Id)
+            return BadRequest();
+
+        if ( ModelState.IsValid && _context.Transactions.Any( p => p.Id == transaction.Id ))
+        {
+            try
+            {
+                _context.Transactions.Update(transaction);
+                await _context.SaveChangesAsync();
+            }
+            catch(DBConcurrencyException)
+            {
+                return StatusCode(500);
+            }
+        }
+        else
+            return NotFound();
+
+        return Ok(transaction);
+    }
+
+    [HttpPost]
+    [Route("Budget/Categories/Create/")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateCategory([Bind("Name"), FromBody] Category category)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Add(category);
+            await _context.SaveChangesAsync();
+            return Created($"Budget/Categories/{category.Id}", category);
+        }
+        return BadRequest();
+    }
+
+    [HttpDelete]
+    [Route("Budget/Categories/Delete/{id}")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var category =  _context.Transactions.Select( p => p.Category).Where( p => p!.Id == id).First() ;
+        if (category != null)
+            _context.Remove(category);
+        else
+            return NotFound();
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("Budget/Categories/Update/{id}")]
+    // [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateCategory(int id, [Bind("Id,Name")] Category category)
+    {
+        if( id != category.Id)
+            return BadRequest();
+
+        if ( ModelState.IsValid && _context.Transactions.Select( p => p.Category)
+            .Any( p => p!.Id == category.Id ))
+        {
+            try
+            {
+                _context.Update(category);
+                await _context.SaveChangesAsync();
+            }
+            catch(DBConcurrencyException)
+            {
+                return StatusCode(500);
+            }
+        }
+        else
+            return NotFound();
+
+        return Ok(category);
     }
 }
