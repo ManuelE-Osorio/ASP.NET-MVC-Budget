@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Buffers;
+using System.Linq;
 
 namespace Budget;
 
@@ -42,7 +43,7 @@ public class BudgetApp
         using (var context = new BudgetContext( 
             app.Services.CreateScope().ServiceProvider.GetRequiredService<DbContextOptions<BudgetContext>>()))
             {
-                context.Database.EnsureDeleted();
+                // context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
 

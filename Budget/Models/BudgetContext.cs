@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Budget.Models;
 
 namespace Budget.Models;
 
@@ -13,10 +12,15 @@ public class BudgetContext(DbContextOptions<BudgetContext> options) : DbContext(
         modelBuilder.Entity<Transaction>( p => 
             {
                 p.HasOne( p => p.Category)
-                    .WithMany( p => p.Transactions)
+                    .WithMany()
                     .IsRequired();
-                p.Property( p => p.Date).IsRequired();
+                p.Property( p => p.Date)
+                    .IsRequired();
             });
+
+        modelBuilder.Entity<Category>()
+            .HasIndex( p => p.Name)
+            .IsUnique();
     }
 }
 

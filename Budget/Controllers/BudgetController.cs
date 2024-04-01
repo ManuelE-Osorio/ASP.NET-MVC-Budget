@@ -18,18 +18,22 @@ public class BudgetController(BudgetContext context) : Controller
     {
         if (_context.Transactions == null)
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
-          
+               
         return View(await _context.Transactions.ToListAsync());
     }
 
     [HttpPost]
     [Route("Budget/Transactions/Create/")]
     // [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateTransaction([Bind("Name,Description,Date,Amount,Category"), FromBody] Transaction transaction)
+    public async Task<IActionResult> CreateTransaction(
+        [Bind("Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid && _context.Categories.Any( p => p.Name == transactionDto.Category ))
         {
+            var transaction = Transaction.FromDTO(transactionDto);
+            transaction.Category = _context.Categories.FirstOrDefault( p => p.Name == transactionDto.Category)!;
             _context.Transactions.Add(transaction);
+
             await _context.SaveChangesAsync();
             return Created($"Budget/Transactions/{transaction.Id}", transaction);
         }
@@ -52,14 +56,25 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpPut]
     [Route("Budget/Transactions/Update/{id}")]
-    // [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdateTransaction(int id, [Bind("Id,Name,Description,Date,Amount,Category")] Transaction transaction)
+    // [ValidateAntiForgeryToken]  //Validate ModelState before id check
+    public async Task<IActionResult> UpdateTransaction(int id, 
+        [Bind("Id,Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
-        if( id != transaction.Id)
+        if( id != transactionDto.Id)
             return BadRequest();
 
-        if ( ModelState.IsValid && _context.Transactions.Any( p => p.Id == transaction.Id ))
+        Transaction transaction;
+
+        if ( ModelState.IsValid && _context.Transactions.Any( p => p.Id == transactionDto.Id ))
         {
+            if(_context.Categories.Any( p => p.Name == transactionDto.Category))
+            {
+                transaction = Transaction.FromDTO(transactionDto);
+                transaction.Category = _context.Categories.FirstOrDefault( p => p.Name == transactionDto.Category)!;
+            }
+            else
+                return BadRequest();
+
             try
             {
                 _context.Transactions.Update(transaction);
@@ -83,7 +98,7 @@ public class BudgetController(BudgetContext context) : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.Add(category);
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
             return Created($"Budget/Categories/{category.Id}", category);
         }
@@ -95,7 +110,7 @@ public class BudgetController(BudgetContext context) : Controller
     // [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var category =  _context.Transactions.Select( p => p.Category).Where( p => p!.Id == id).First() ;
+        var category =  _context.Categories.Find( id ) ;
         if (category != null)
             _context.Remove(category);
         else
@@ -107,17 +122,17 @@ public class BudgetController(BudgetContext context) : Controller
     [HttpPut]
     [Route("Budget/Categories/Update/{id}")]
     // [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdateCategory(int id, [Bind("Id,Name")] Category category)
+    public async Task<IActionResult> UpdateCategory(int id, 
+        [Bind("Id,Name"), FromBody] Category category)
     {
         if( id != category.Id)
             return BadRequest();
 
-        if ( ModelState.IsValid && _context.Transactions.Select( p => p.Category)
-            .Any( p => p!.Id == category.Id ))
+        if ( ModelState.IsValid && _context.Categories.Any( p => p.Id == category.Id ))
         {
             try
             {
-                _context.Update(category);
+                _context.Categories.Update(category);
                 await _context.SaveChangesAsync();
             }
             catch(DBConcurrencyException)

@@ -5,7 +5,7 @@
 }
 
 
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>
@@ -21,7 +21,7 @@
                 @Html.DisplayNameFor( p => p.FirstOrDefault()!.Amount)
             </th>
             <th>
-                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Category)
+                @Html.DisplayNameFor( p => p.FirstOrDefault()!.Category.Name)
             </th>
         </tr>
     </thead>
@@ -43,7 +43,7 @@
                 @Html.DisplayFor( p => element.Amount)
             </td>
             <td>
-                @Html.DisplayFor( p => element.Category)
+                @Html.DisplayFor( p => element.Category.Name)
             </td>
         </tr>
     }

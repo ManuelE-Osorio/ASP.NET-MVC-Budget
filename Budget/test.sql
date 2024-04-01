@@ -6,3 +6,6 @@ GO
 
 SELECT * FROM Categories
 GO
+
+SELECT * FROM Transactions
+GO
