@@ -18,8 +18,9 @@ public class BudgetController(BudgetContext context) : Controller
     {
         if (_context.Transactions == null)
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
-               
-        return View(await _context.Transactions.ToListAsync());
+
+        var transaction = await _context.Transactions.Include(p => p.Category).ToListAsync();
+        return View( transaction );
     }
 
     [HttpPost]
@@ -28,7 +29,7 @@ public class BudgetController(BudgetContext context) : Controller
     public async Task<IActionResult> CreateTransaction(
         [Bind("Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
-        if (ModelState.IsValid && _context.Categories.Any( p => p.Name == transactionDto.Category ))
+        if (ModelState.IsValid && _context.Categories.Any( p => p.Name == transactionDto.Category ))  //check duplicate cat
         {
             var transaction = Transaction.FromDTO(transactionDto);
             transaction.Category = _context.Categories.FirstOrDefault( p => p.Name == transactionDto.Category)!;
@@ -96,7 +97,7 @@ public class BudgetController(BudgetContext context) : Controller
     // [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateCategory([Bind("Name"), FromBody] Category category)
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid)  // check duplicate cat
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();

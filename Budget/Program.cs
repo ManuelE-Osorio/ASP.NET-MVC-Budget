@@ -45,6 +45,8 @@ public class BudgetApp
             {
                 // context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+                // var transactions = context.Transactions.Include(p => p.Category).ToList();
+                // var cat = context.Categories.ToList();
             }
 
         app.UseHttpsRedirection();
