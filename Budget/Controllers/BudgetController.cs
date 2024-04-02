@@ -20,7 +20,13 @@ public class BudgetController(BudgetContext context) : Controller
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
 
         var transaction = await _context.Transactions.Include(p => p.Category).ToListAsync();
-        return View( transaction );
+        var categories = await _context.Categories.ToListAsync();
+        var viewModel = new IndexViewModel 
+        {
+            Categories = categories,
+            Transactions = transaction
+        };
+        return View( viewModel );
     }
 
     [HttpPost]

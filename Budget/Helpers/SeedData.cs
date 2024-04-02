@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Budget.Models;
-using Microsoft.Net.Http.Headers;
 
 namespace Budget.Helpers;
 
@@ -65,34 +64,34 @@ public class SeedData
                 Category = context.Categories.FirstOrDefault( p => p.Name == "Housing")!
             },
             new Transaction {
-                Name = ,
-                Description = ,
-                Date = ,
-                Amount = ,
-                Category = context.Categories.FirstOrDefault( p => p.Name == )!
+                Name = "Home Internet",
+                Description = "Home Internet Service of April",
+                Date = new DateTime(2024, 04, 01, 11, 00, 0),
+                Amount = 260,
+                Category = context.Categories.FirstOrDefault( p => p.Name == "Utilities")!
             },
             new Transaction {
-                Name = ,
-                Description = ,
-                Date = ,
-                Amount = ,
-                Category = context.Categories.FirstOrDefault( p => p.Name == )!
+                Name = "Cat food",
+                Description = "Monthly cat food bag",
+                Date = new DateTime(2024, 04, 01, 11, 00, 0),
+                Amount = 710,
+                Category = context.Categories.FirstOrDefault( p => p.Name == "Pets")!
             },
             new Transaction {
-                Name = ,
-                Description = ,
-                Date = ,
-                Amount = ,
-                Category = context.Categories.FirstOrDefault( p => p.Name == )!
+                Name = "Car Fuel",
+                Description = "First week of April fuel expenses",
+                Date = new DateTime(2024, 04, 01, 11, 00, 0),
+                Amount = 500,
+                Category = context.Categories.FirstOrDefault( p => p.Name == "Utilities")!
             },
             new Transaction {
-                Name = ,
-                Description = ,
-                Date = ,
-                Amount = ,
-                Category = context.Categories.FirstOrDefault( p => p.Name == )!
+                Name = "Take out food",
+                Description = "Take out food for first weekend of April",
+                Date = new DateTime(2024, 04, 06, 11, 00, 0),
+                Amount = 200,
+                Category = context.Categories.FirstOrDefault( p => p.Name == "Entertainment")!
             },
         ]);
-
+        context.SaveChanges();
     }
 }

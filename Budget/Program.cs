@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Buffers;
 using System.Linq;
+using Budget.Helpers;
 
 namespace Budget;
 
@@ -43,8 +44,10 @@ public class BudgetApp
         using (var context = new BudgetContext( 
             app.Services.CreateScope().ServiceProvider.GetRequiredService<DbContextOptions<BudgetContext>>()))
             {
-                // context.Database.EnsureDeleted();
+                context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+                SeedData.SeedCategories(context);
+                SeedData.SeedTransactions(context);
                 // var transactions = context.Transactions.Include(p => p.Category).ToList();
                 // var cat = context.Categories.ToList();
             }
