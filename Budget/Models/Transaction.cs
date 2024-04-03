@@ -6,15 +6,24 @@ namespace Budget.Models;
 
 public class Transaction
 {
+    [Required]
     public int Id { get; set; }
+
+    [Required]
+    [StringLength(100, MinimumLength = 3)]
     public string Name {get; set;} = "";
+
+    [Required]
     public string Description {get; set;} = "";
+
+    [Required]
     public DateTime Date {get; set;}
 
-    [Column(TypeName = "decimal(19, 4)")]
+    [Range(0, int.MaxValue, MinimumIsExclusive = true), DataType(DataType.Currency), Column(TypeName = "decimal(19, 4)")]
     [DisplayFormat(DataFormatString="{0:C}")]
     public decimal Amount {get; set;}
     
+    [Required]
     public Category Category {get; set;} = new Category();
 
     public static Transaction FromDTO (TransactionDTO transactionDTO)

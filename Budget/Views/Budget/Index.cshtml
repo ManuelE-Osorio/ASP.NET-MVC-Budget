@@ -13,6 +13,57 @@
     </li>
 </ul>
 
+<div class="modal fade" id="edit-transaction-modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalLabel">Edit </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+        <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Transactions.FirstOrDefault()!.Id" />
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Name" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Name" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Description" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Description" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Date" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Date" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Amount" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Amount" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="input-group-text" for="Category"><strong>Category:</strong></label>
+                <select class="form-select" name="Category" id="Category">
+                    @foreach( var category in Model.Categories)
+                    {
+                        <option value="@category.Name">@Html.DisplayFor(p => category.Name)</option>
+                    }
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="inputButton">Create</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
+
 <table id="transactions-table" class="table">
     <thead>
         <tr>
@@ -31,13 +82,16 @@
             <th>
                 @Html.DisplayNameFor( p => p.Transactions.FirstOrDefault()!.Category)
             </th>
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
 
     @foreach(var element in Model.Transactions)
     {
-        <tr>
+        <tr id="transaction-@element.Id">
             <td>
                 @Html.DisplayFor( p => element.Name)
             </td>
@@ -52,6 +106,10 @@
             </td>
             <td>
                 @Html.DisplayFor( p => element.Category.Name)
+            </td>
+            <td>
+                <button class="bg-primary mx-2" onclick="transactionModal(@element.Id)">Edit</button>
+                <button class="bg-danger mx-2" onclick="deleteTransactionModal(@element.Id)">Delete</button>
             </td>
         </tr>
     }
@@ -78,3 +136,43 @@
     }
     </tbody>
 </table>
+
+    <div class="col-md-4">
+
+        <form method="put">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Transactions.FirstOrDefault()!.Id" />
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Name" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Name" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Description" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Description" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Date" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Date" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transactions.FirstOrDefault()!.Amount" class="control-label"></label>
+                <input asp-for="Transactions.FirstOrDefault()!.Amount" class="form-control" />
+                <span asp-validation-for="Transactions.FirstOrDefault()!.Amount" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                <label class="input-group-text" for="Category"><strong>Category:</strong></label>
+                <select class="form-select" name="Category" id="Category">
+                    @foreach( var category in Model.Categories)
+                    {
+                        <option value="@category.Name">@Html.DisplayFor(p => category.Name)</option>
+                    }
+                </select>
+            </div> *@
+            <div class="form-group p-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+        </div>

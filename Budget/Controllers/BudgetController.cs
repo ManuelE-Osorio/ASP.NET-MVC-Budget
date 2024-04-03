@@ -67,12 +67,13 @@ public class BudgetController(BudgetContext context) : Controller
     public async Task<IActionResult> UpdateTransaction(int id, 
         [Bind("Id,Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
-        if( id != transactionDto.Id)
+
+        if(!ModelState.IsValid || id != transactionDto.Id)
             return BadRequest();
 
         Transaction transaction;
 
-        if ( ModelState.IsValid && _context.Transactions.Any( p => p.Id == transactionDto.Id ))
+        if ( _context.Transactions.Any( p => p.Id == transactionDto.Id ))
         {
             if(_context.Categories.Any( p => p.Name == transactionDto.Category))
             {

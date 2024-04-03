@@ -17,7 +17,16 @@ public class BudgetApp
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "AllowAnyOrigin",
+                policy  =>
+                {
+                    policy.AllowAnyOrigin();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyHeader();
+                });
+        });
         builder.Services.AddControllersWithViews();
         builder.Services.AddDbContext<BudgetContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetConnectionString") ?? 
@@ -53,6 +62,7 @@ public class BudgetApp
             }
 
         app.UseHttpsRedirection();
+        app.UseCors("AllowAnyOrigin");
         app.UseStaticFiles();
 
         app.UseRouting();
