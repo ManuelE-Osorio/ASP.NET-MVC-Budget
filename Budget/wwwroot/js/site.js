@@ -78,13 +78,15 @@ function deleteFetch(event){
 }
 
 function createTransaction(transaction){
+    debugger
     const apiAddress = `Budget/Transactions/Create/`  
     fetch(apiAddress,
     {
         method: 'POST',
         headers: {
             'Accept' : '*/*' ,
-            'Content-Type' : 'application/json'},
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${transaction.__RequestVerificationToken}`},
         body: JSON.stringify(transaction)
     })
     .then( response => {
@@ -112,14 +114,14 @@ function createTransaction(transaction){
 
 function updateTransaction(transaction)
 {
-    delete transaction.__Invariant
     const apiAddress = `Budget/Transactions/Update/${transaction.Id}`  
     fetch(apiAddress,
     {
         method: 'PUT',
         headers: {
             'Accept' : '*/*' ,
-            'Content-Type' : 'application/json'},
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${transaction.__RequestVerificationToken}`},
         body: JSON.stringify(transaction)
     })
     .then( response => {
@@ -154,7 +156,8 @@ function deleteTransaction(transaction)
             method: 'DELETE',
             headers: {
                 'Accept' : '*/*' ,
-                'Content-Type' : 'application/json'}
+                'Content-Type' : 'application/json',
+                'RequestVerificationToken': `${transaction.__RequestVerificationToken}`}
         })
         .then( response => {
             if(response.status == 200){
@@ -187,7 +190,8 @@ function createCategory(category){
         method: 'POST',
         headers: {
             'Accept' : '*/*' ,
-            'Content-Type' : 'application/json'},
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${category.__RequestVerificationToken}`},
         body: JSON.stringify(category)
     })
     .then( response => {
@@ -220,7 +224,8 @@ function updateCategory(category){
         method: 'PUT',
         headers: {
             'Accept' : '*/*' ,
-            'Content-Type' : 'application/json'},
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${category.__RequestVerificationToken}`},
         body: JSON.stringify(category)
     })
     .then( response => {
@@ -255,7 +260,8 @@ function deleteCategory(category){
             method: 'DELETE',
             headers: {
                 'Accept' : '*/*' ,
-                'Content-Type' : 'application/json'}
+                'Content-Type' : 'application/json',
+                'RequestVerificationToken': `${category.__RequestVerificationToken}`},
         })
         .then( response => {
             if(response.status == 200){
