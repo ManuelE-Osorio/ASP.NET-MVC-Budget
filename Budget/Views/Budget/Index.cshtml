@@ -140,7 +140,7 @@
                 })">
                     <option value="">All</option>
                 </select>
-                Date: <input type="date" asp-for="Date" />
+                Date: <input type="date" asp-for="Date" value="null"/>
 
                 Name: <input type="text" asp-for="TransactionName" />
                 <input type="submit" value="Filter" />
@@ -256,8 +256,8 @@
     </table>
 </div>
 
-<h2> Test form</h2>
-    <div class="col-md-4">
+<h2 hidden> Test form</h2>
+    <div class="col-md-4" hidden>
 
         <form method="put">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
