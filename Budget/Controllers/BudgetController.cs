@@ -41,11 +41,11 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpPost]
     [Route("Budget/Transactions/Create/")]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateTransaction(
         [Bind("Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
-        if (ModelState.IsValid && _context.Categories.Any( p => p.Name == transactionDto.Category ))  //check duplicate cat
+        if (ModelState.IsValid && _context.Categories.Any( p => p.Name == transactionDto.Category ))
         {
             var transaction = Transaction.FromDTO(transactionDto);
             transaction.Category = _context.Categories.FirstOrDefault( p => p.Name == transactionDto.Category)!;
@@ -59,7 +59,7 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpDelete]
     [Route("Budget/Transactions/Delete/{id}")]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteTransaction(int id)
     {
         var transaction = await _context.Transactions.FindAsync(id);
@@ -73,7 +73,7 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpPut]
     [Route("Budget/Transactions/Update/{id}")]
-    // [ValidateAntiForgeryToken]  //Validate ModelState before id check
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateTransaction(int id, 
         [Bind("Id,Name,Description,Date,Amount,Category"), FromBody] TransactionDTO transactionDto)
     {
@@ -111,10 +111,10 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpPost]
     [Route("Budget/Categories/Create/")]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateCategory([Bind("Name"), FromBody] Category category)
     {
-        if (ModelState.IsValid)  // check duplicate cat
+        if (ModelState.IsValid && !_context.Categories.Any( p => p.Name == category.Name))
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
@@ -125,7 +125,7 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpDelete]
     [Route("Budget/Categories/Delete/{id}")]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category =  _context.Categories.Find( id ) ;
@@ -139,14 +139,15 @@ public class BudgetController(BudgetContext context) : Controller
 
     [HttpPut]
     [Route("Budget/Categories/Update/{id}")]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCategory(int id, 
         [Bind("Id,Name"), FromBody] Category category)
     {
         if( id != category.Id)
             return BadRequest();
 
-        if ( ModelState.IsValid && _context.Categories.Any( p => p.Id == category.Id ))
+        if ( ModelState.IsValid && _context.Categories.Any( p => p.Id == category.Id ) && 
+            !_context.Categories.Any( p => p.Name == category.Name))
         {
             try
             {
