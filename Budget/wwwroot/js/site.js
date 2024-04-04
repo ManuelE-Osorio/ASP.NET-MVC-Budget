@@ -25,47 +25,51 @@ function SwitchToCategories(event){
 
 function transactionFetch(event){
     event.preventDefault()
-    const formData = new FormData(event.target)
-    const transaction = Object.fromEntries(formData);
-    if(transaction.Id == 0)
-    {
-        createTransaction(transaction)
-    }
-    else
-    {
-        updateTransaction(transaction)
+    if($("#transaction-form").valid()){
+        const formData = new FormData(event.target)
+        const transaction = Object.fromEntries(formData);
+        if(transaction.Id == 0)
+        {
+            createTransaction(transaction)
+        }
+        else
+        {
+            updateTransaction(transaction)
+        }
     }
 }
 
 function categoryFetch(event){
     event.preventDefault()
-    const formData = new FormData(event.target)
-    const category = Object.fromEntries(formData);
-    if(category.Id == 0)
-    {
-        createCategory(category)
-    }
-    else
-    {
-        updateCategory(category)
+    if($("#category-form").valid()){
+        const formData = new FormData(event.target)
+        const category = Object.fromEntries(formData);
+        if(category.Id == 0)
+        {
+            createCategory(category)
+        }
+        else
+        {
+            updateCategory(category)
+        }
     }
 }
 
 function deleteFetch(event){
-
     event.preventDefault()
-    const formData = new FormData(event.target)
-    const deleteObject = Object.fromEntries(formData);
-    if(deleteObject.type == 'transaction'){
-        deleteTransaction(deleteObject)
-    }
-    else if(deleteObject.type == 'category'){
-        deleteCategory(deleteObject)
+    if($("#delete-form").valid()){
+        const formData = new FormData(event.target)
+        const deleteObject = Object.fromEntries(formData);
+        if(deleteObject.type == 'transaction'){
+            deleteTransaction(deleteObject)
+        }
+        else if(deleteObject.type == 'category'){
+            deleteCategory(deleteObject)
+        }
     }
 }
 
 function createTransaction(transaction){
-    debugger
     const apiAddress = `Budget/Transactions/Create/`  
     fetch(apiAddress,
     {
@@ -80,7 +84,7 @@ function createTransaction(transaction){
         if(response.status == 201){
             return response.json()
         }
-        else if (response.status == 404)
+        else if (response.status == 400)
         {
             throw new Error('Bad request, please check the form values.')
         }
@@ -96,7 +100,8 @@ function createTransaction(transaction){
     })
     .catch( e => {
         window.alert(e)
-        console.log('Catch', e)})
+        console.log('Catch', e)
+    })
 }
 
 function updateTransaction(transaction)
@@ -139,35 +144,35 @@ function deleteTransaction(transaction)
 {
     const apiAddress = `Budget/Transactions/Delete/${transaction.id}`
     fetch(apiAddress,
+    {
+        method: 'DELETE',
+        headers: {
+            'Accept' : '*/*' ,
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${transaction.__RequestVerificationToken}`}
+    })
+    .then( response => {
+        if(response.status == 200){
+            return
+        }
+        else if (response.status == 404)
         {
-            method: 'DELETE',
-            headers: {
-                'Accept' : '*/*' ,
-                'Content-Type' : 'application/json',
-                'RequestVerificationToken': `${transaction.__RequestVerificationToken}`}
-        })
-        .then( response => {
-            if(response.status == 200){
-                return
-            }
-            else if (response.status == 404)
-            {
-                throw new Error('Bad request, the element does not exist.')
-            }
-            else{
-                throw new Error('Server error, please try again later.')
-            }
-        })
-        .then( () => {
-            document.getElementById(`transaction-${transaction.id}`).remove()
-            const element = document.getElementById('delete-modal')
-            const modal = bootstrap.Modal.getOrCreateInstance(element)
-            modal.hide()
-        })
-        .catch( e => {
-            window.alert(e)
-            console.log('Catch', e)
-        })
+            throw new Error('Bad request, the element does not exist.')
+        }
+        else{
+            throw new Error('Server error, please try again later.')
+        }
+    })
+    .then( () => {
+        document.getElementById(`transaction-${transaction.id}`).remove()
+        const element = document.getElementById('delete-modal')
+        const modal = bootstrap.Modal.getOrCreateInstance(element)
+        modal.hide()
+    })
+    .catch( e => {
+        window.alert(e)
+        console.log('Catch', e)
+    })
 }
 
 function createCategory(category){
@@ -185,7 +190,7 @@ function createCategory(category){
         if(response.status == 201){
             return response.json()
         }
-        else if (response.status == 404)
+        else if (response.status == 400)
         {
             throw new Error('Bad request, please check the form values.')
         }
@@ -201,7 +206,8 @@ function createCategory(category){
     })
     .catch( e => {
         window.alert(e)
-        console.log('Catch', e)})    
+        console.log('Catch', e)
+    })    
 }
 
 function updateCategory(category){
@@ -242,35 +248,35 @@ function updateCategory(category){
 function deleteCategory(category){
     const apiAddress = `Budget/Categories/Delete/${category.id}`
     fetch(apiAddress,
+    {
+        method: 'DELETE',
+        headers: {
+            'Accept' : '*/*' ,
+            'Content-Type' : 'application/json',
+            'RequestVerificationToken': `${category.__RequestVerificationToken}`},
+    })
+    .then( response => {
+        if(response.status == 200){
+            return
+        }
+        else if (response.status == 404)
         {
-            method: 'DELETE',
-            headers: {
-                'Accept' : '*/*' ,
-                'Content-Type' : 'application/json',
-                'RequestVerificationToken': `${category.__RequestVerificationToken}`},
-        })
-        .then( response => {
-            if(response.status == 200){
-                return
-            }
-            else if (response.status == 404)
-            {
-                throw new Error('Bad request, the element does not exist.')
-            }
-            else{
-                throw new Error('Server error, please try again later.')
-            }
-        })
-        .then( () => {
-            document.getElementById(`category-${category.id}`).remove()
-            const element = document.getElementById('delete-modal')
-            const modal = bootstrap.Modal.getOrCreateInstance(element)
-            modal.hide()
-        })
-        .catch( e => {
-            window.alert(e)
-            console.log('Catch', e)
-        })    
+            throw new Error('Bad request, the element does not exist.')
+        }
+        else{
+            throw new Error('Server error, please try again later.')
+        }
+    })
+    .then( () => {
+        document.getElementById(`category-${category.id}`).remove()
+        const element = document.getElementById('delete-modal')
+        const modal = bootstrap.Modal.getOrCreateInstance(element)
+        modal.hide()
+    })
+    .catch( e => {
+        window.alert(e)
+        console.log('Catch', e)
+    })    
 }
 
 function insertTransaction(transaction){
