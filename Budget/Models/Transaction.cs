@@ -18,6 +18,7 @@ public class Transaction
     public string Description {get; set;} = "";
 
     [Required]
+    [DataType(DataType.DateTime)]
     public DateTime Date {get; set;}
 
     [Range(0, int.MaxValue, MinimumIsExclusive = true), DataType(DataType.Currency), Column(TypeName = "decimal(19, 4)")]
