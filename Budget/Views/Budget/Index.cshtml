@@ -126,8 +126,9 @@
 </div>
 
 <div class="container" id="transactions-container">
-
-    <div class="tab-content p-3" id="myTabContent">
+<div class="container  my-3">
+    <div class="row align-items-start">
+    <div class="col justify-content-start">
         <form>
             <p>
                 <select asp-for="CategoryName" asp-items="Model.Categories.Select( p => {
@@ -146,8 +147,12 @@
                 <input type="submit" value="Filter" />
             </p>
         </form>
+    </div>
+    <div class="col-3">
         <button class="btn btn-success" onclick="transactionModal(0)">Create new</button>
     </div>
+    </div>
+</div>
 
     <table id="transactions-table" class="table table-hover">
         <thead>
@@ -179,7 +184,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>
+                <td class="text-end">
                     <button class="btn btn-primary mx-2" onclick="transactionModal(0)">Edit</button>
                     <button class="btn btn-danger mx-2" onclick="deleteModal(0, 'transaction')">Delete</button>
                 </td>
@@ -204,7 +209,7 @@
                 <td>
                     @Html.DisplayFor( p => element.Category.Name)
                 </td>
-                <td>
+                <td class="text-end"> 
                     <button class="btn btn-primary mx-2" onclick="transactionModal(@element.Id)">Edit</button>
                     <button class="btn btn-danger mx-2" onclick="deleteModal(@element.Id, 'transaction')">Delete</button>
                 </td>
@@ -212,13 +217,18 @@
         }
         </tbody>
     </table>
+
 </div>
 
-<div class="container" id="categories-container" hidden>
 
-    <div class="tab-content p-3" id="myTabContent">
+<div class="container" id="categories-container" hidden>
+<div class="container  my-3">
+    <div class="row justify-content-end">
+    <div class="col-3">
         <button class="btn btn-success" onclick="categoryModal(0)">Create new</button>
     </div>
+    </div>
+</div>
 
     <table id = "categories-table" class="table table-hover">
         <thead>
@@ -234,7 +244,7 @@
         <tbody id="categories-table-body">
             <tr id="category-template" hidden>
                 <td></td>
-                <td>
+                <td class="text-end">
                     <button class="btn btn-primary mx-2" onclick="transactionModal(0)">Edit</button>
                     <button class="btn btn-danger mx-2" onclick="deleteModal(0, 'transaction')">Delete</button>
                 </td>
@@ -246,7 +256,7 @@
                 <td>
                     @Html.DisplayFor( p => element.Name)
                 </td>
-                <td>
+                <td class="text-end">
                     <button class="btn btn-primary mx-2" onclick="categoryModal(@element.Id)">Edit</button>
                     <button class="btn btn-danger mx-2" onclick="deleteModal(@element.Id, 'category')">Delete</button>
                 </td>
