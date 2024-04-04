@@ -22,7 +22,7 @@
         </div>
         <div class="modal-body">
 
-        <form method="post">
+        <form method="post" id="transaction-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Transactions.FirstOrDefault()!.Id" />
             <div class="form-group my-2">
@@ -77,7 +77,7 @@
         </div>
         <div class="modal-body">
 
-        <form method="post">
+        <form method="post" id="category-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Categories.FirstOrDefault()!.Id" />
             <div class="form-group my-2">
@@ -104,7 +104,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form method="delete">
+            <form method="delete" id="delete-form">
                 <div class="mb-3">
                     <input type="hidden" id="delete-id" name="id" value="0">
                 </div>
@@ -256,47 +256,6 @@
     </table>
 </div>
 
-<h2 hidden> Test form</h2>
-    <div class="col-md-4" hidden>
-
-        <form method="put">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Transactions.FirstOrDefault()!.Id" />
-            <div class="form-group my-2">
-                <label asp-for="Transactions.FirstOrDefault()!.Name" class="control-label"></label>
-                <input asp-for="Transactions.FirstOrDefault()!.Name" class="form-control" />
-                <span asp-validation-for="Transactions.FirstOrDefault()!.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group my-2">
-                <label asp-for="Transactions.FirstOrDefault()!.Description" class="control-label"></label>
-                <input asp-for="Transactions.FirstOrDefault()!.Description" class="form-control" />
-                <span asp-validation-for="Transactions.FirstOrDefault()!.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group my-2">
-                <label asp-for="Transactions.FirstOrDefault()!.Date" class="control-label"></label>
-                <input asp-for="Transactions.FirstOrDefault()!.Date" class="form-control" />
-                <span asp-validation-for="Transactions.FirstOrDefault()!.Date" class="text-danger"></span>
-            </div>
-            <div class="form-group my-2">
-                <label asp-for="Transactions.FirstOrDefault()!.Amount" class="control-label"></label>
-                <input asp-for="Transactions.FirstOrDefault()!.Amount" class="form-control" />
-                <span asp-validation-for="Transactions.FirstOrDefault()!.Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group my-2">
-                <label asp-for="Transactions.FirstOrDefault()!.Category" class="control-label"></label>
-                <select asp-for="Transactions.FirstOrDefault()!.Category" asp-items="Model.Categories.Select( p => {
-                    return new SelectListItem()
-                    {
-                        Text = p.Name.ToString(),
-                        Value = p.Name.ToString(),
-                        Selected = false
-                    };
-                })"></select>
-                <span asp-validation-for="Transactions.FirstOrDefault()!.Category" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group p-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
