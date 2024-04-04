@@ -5,23 +5,10 @@ document.getElementById('category-modal').querySelector('form').addEventListener
 document.getElementById('delete-modal').querySelector('form').addEventListener('submit', event => deleteFetch(event))
 
 function SwitchToTransactions(event){
-     //use event.target
-    const transactions = document.getElementById("nav-link-transactions")
-    const transactionsTable = document.getElementById("transactions-container")
-    const categories = document.getElementById("nav-link-categories")
-    const categoriesTable = document.getElementById("categories-container")
-    const attrib = transactions.getAttribute('class')
-    if (!attrib.includes('active'))
-    {
-        transactions.setAttribute('class', 'nav-link active')
-        categories.setAttribute('class', 'nav-link')
-        transactionsTable.hidden = false
-        categoriesTable.hidden = true
-    }
+    location.reload() 
 }
 
 function SwitchToCategories(event){
-      //use event.target
     const transactions = document.getElementById("nav-link-transactions")
     const transactionsTable = document.getElementById("transactions-container")
     const categories = document.getElementById("nav-link-categories")
@@ -245,7 +232,6 @@ function updateCategory(category){
         const element = document.getElementById('category-modal')
         const modal = bootstrap.Modal.getOrCreateInstance(element)
         modal.hide()
-        location.reload() 
     })
     .catch( e => {
         window.alert(e)
@@ -280,7 +266,6 @@ function deleteCategory(category){
             const element = document.getElementById('delete-modal')
             const modal = bootstrap.Modal.getOrCreateInstance(element)
             modal.hide()
-            location.reload() 
         })
         .catch( e => {
             window.alert(e)
