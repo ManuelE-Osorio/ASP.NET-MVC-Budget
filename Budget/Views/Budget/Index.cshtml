@@ -216,6 +216,18 @@
             </tr>
         }
         </tbody>
+        @* <tfoot>
+            <tr>
+                <th>
+                    Total
+                </th>
+                <td></td>
+                <td></td>
+                <td>@Model.Transactions.Sum( p => p.Amount).ToString("C")</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot> *@
     </table>
 
 </div>
