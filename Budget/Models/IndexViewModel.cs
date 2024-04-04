@@ -10,5 +10,5 @@ public class IndexViewModel
     public List<Transaction> Transactions {get; set;} = [];
     public string? TransactionName { get; set; }
     public string? CategoryName { get; set; }
-    public DateOnly Date {get; set;}
+    public DateOnly TransactionDate {get; set;}
 }

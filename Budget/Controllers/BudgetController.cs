@@ -12,7 +12,7 @@ public class BudgetController(BudgetContext context) : Controller
 {
     private readonly BudgetContext _context = context;
 
-    public async Task<IActionResult> Index(string? transactionName, string? categoryName, DateTime? date)
+    public async Task<IActionResult> Index(string? transactionName, string? categoryName, DateOnly? transactionDate)
     {
         if (_context.Transactions == null)
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
@@ -28,11 +28,12 @@ public class BudgetController(BudgetContext context) : Controller
         if(categoryName is not null)
             transactionQuery = transactionQuery.Where( p => p.Category.Name.Contains(categoryName) == true);
 
-        var categories = await _context.Categories.ToListAsync();
+        if(transactionDate is not null)
+            transactionQuery = transactionQuery.Where( p => DateOnly.FromDateTime(p.Date) == transactionDate);
 
         var viewModel = new IndexViewModel 
         {
-            Categories = categories,
+            Categories = await _context.Categories.ToListAsync(),
             Transactions = await transactionQuery.ToListAsync()
         };
         return View( viewModel );
