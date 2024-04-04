@@ -2,6 +2,11 @@
 
 ASP.NET MVC budget tracking app with the goal of develop a more complex app than previous projects
 
+## Todo
+
+1. Add client side validation
+2. Deleting a category reloads the page but doesnt switch to categories again
+
 ## References
 
 1. <https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions-1/unit-testing/creating-unit-tests-for-asp-net-mvc-applications-cs>

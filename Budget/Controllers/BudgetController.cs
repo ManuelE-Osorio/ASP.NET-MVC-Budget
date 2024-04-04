@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Budget.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq;
 using System.Data;
-using Microsoft.Extensions.FileProviders;
+using System;
 
 namespace Budget.Controllers;
 
@@ -14,17 +12,28 @@ public class BudgetController(BudgetContext context) : Controller
 {
     private readonly BudgetContext _context = context;
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? transactionName, string? categoryName, DateTime? date)
     {
         if (_context.Transactions == null)
             return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
 
-        var transaction = await _context.Transactions.Include(p => p.Category).ToListAsync();
+        var transactionQuery = from m in _context.Transactions
+            select m;
+  
+        transactionQuery = transactionQuery.Include(p => p.Category);
+
+        if(transactionName is not null)
+            transactionQuery = transactionQuery.Where( p => p.Name.Contains(transactionName) == true);
+
+        if(categoryName is not null)
+            transactionQuery = transactionQuery.Where( p => p.Category.Name.Contains(categoryName) == true);
+
         var categories = await _context.Categories.ToListAsync();
+
         var viewModel = new IndexViewModel 
         {
             Categories = categories,
-            Transactions = transaction
+            Transactions = await transactionQuery.ToListAsync()
         };
         return View( viewModel );
     }
